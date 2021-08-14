@@ -6,7 +6,7 @@ import androidx.room.*
 @Dao
 interface RunDAO {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE) // 동일한 데이터가 있으면 해당 데이터를 새것으로 교체
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRun(run: Run)
 
     @Delete
@@ -16,7 +16,7 @@ interface RunDAO {
     fun getAllRunsSortedByDate(): LiveData<List<Run>>
 
     @Query("SELECT * FROM running_table ORDER BY timeInMillis DESC")
-    fun getAllRunsSortedByTimeMillis(): LiveData<List<Run>>
+    fun getAllRunsSortedByTimeInMillis(): LiveData<List<Run>>
 
     @Query("SELECT * FROM running_table ORDER BY caloriesBurned DESC")
     fun getAllRunsSortedByCaloriesBurned(): LiveData<List<Run>>
@@ -38,5 +38,4 @@ interface RunDAO {
 
     @Query("SELECT AVG(avgSpeedInKMH) FROM running_table")
     fun getTotalAvgSpeed(): LiveData<Float>
-
 }
