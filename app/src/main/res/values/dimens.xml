@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="txt30">30sp</dimen>
+    <dimen name="basic56">56dp</dimen>
+    <dimen name="basic08">8dp</dimen>
+    <dimen name="txt36">36sp</dimen>
+    <dimen name="basic16">16dp</dimen>
+    <dimen name="txt24">24sp</dimen>
+    <dimen name="basic32">32dp</dimen>
+    <dimen name="txt16">16sp</dimen>
+</resources>
