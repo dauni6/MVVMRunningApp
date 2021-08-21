@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/setupFragment">
 
     <fragment
         android:id="@+id/setupFragment"
         android:name="com.example.mvvmrunningapp.ui.fragments.SetupFragment"
-        android:label="SetupFragment">
+        android:label="SetupFragment"
+        tools:layout="@layout/fragment_setup">
         <action
             android:id="@+id/action_setup_to_run"
             app:destination="@id/runFragment" />
@@ -15,7 +17,8 @@
     <fragment
         android:id="@+id/runFragment"
         android:name="com.example.mvvmrunningapp.ui.fragments.RunFragment"
-        android:label="RunFragment">
+        android:label="RunFragment"
+        tools:layout="@layout/fragment_run">
         <action
             android:id="@+id/action_run_to_tracking"
             app:destination="@id/trackingFragment" />
@@ -23,11 +26,13 @@
     <fragment
         android:id="@+id/statisticsFragment"
         android:name="com.example.mvvmrunningapp.ui.fragments.StatisticsFragment"
-        android:label="StatisticsFragment" />
+        android:label="StatisticsFragment"
+        tools:layout="@layout/fragment_statistics"/>
     <fragment
         android:id="@+id/trackingFragment"
         android:name="com.example.mvvmrunningapp.ui.fragments.TrackingFragment"
-        android:label="TrackingFragment">
+        android:label="TrackingFragment"
+        tools:layout="@layout/fragment_tracking">
         <action
             android:id="@+id/action_tracking_to_run"
             app:destination="@id/runFragment" />
@@ -35,5 +40,6 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.mvvmrunningapp.ui.fragments.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings"/>
 </navigation>
