@@ -30,7 +30,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/basic300"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/text_your_name"

@@ -8,4 +8,5 @@
     <dimen name="txt24">24sp</dimen>
     <dimen name="basic32">32dp</dimen>
     <dimen name="txt16">16sp</dimen>
+    <dimen name="basic300">300dp</dimen>
 </resources>
