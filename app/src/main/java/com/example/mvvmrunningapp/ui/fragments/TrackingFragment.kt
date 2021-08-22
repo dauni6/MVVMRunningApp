@@ -1,5 +1,6 @@
 package com.example.mvvmrunningapp.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.mvvmrunningapp.databinding.FragmentTrackingBinding
+import com.example.mvvmrunningapp.other.Constants.ACTION_START_OR_RESUME_SERVICE
+import com.example.mvvmrunningapp.service.TrackingService
 import com.example.mvvmrunningapp.ui.viewmodel.MainViewModel
 import com.google.android.gms.maps.GoogleMap
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,16 +35,23 @@ class TrackingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initMapView(savedInstanceState)
+        initViews(savedInstanceState)
     }
 
-    private fun initMapView(savedInstanceState: Bundle?) {
+    private fun initViews(savedInstanceState: Bundle?) {
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync {
             // todo do something
         }
 
+        binding.btnToggleRun.setOnClickListener {
+            sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
+        }
+
     }
+
+
+    private fun sendCommandToService(action: String) = TrackingService.newServiceIntent(requireContext(), action)
 
     override fun onStart() {
         super.onStart()
