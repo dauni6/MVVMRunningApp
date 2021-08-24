@@ -5,6 +5,12 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/setupFragment">
 
+    <!-- global action 만들기 -->
+    <action android:id="@+id/action_global_trackingFragment"
+        app:destination="@id/trackingFragment"
+        app:launchSingleTop="true" />
+    <!-- notification을 클릭할 때마다 새로운 instance 만들지 않기 위해 true설정 -->
+
     <fragment
         android:id="@+id/setupFragment"
         android:name="com.example.mvvmrunningapp.ui.fragments.SetupFragment"

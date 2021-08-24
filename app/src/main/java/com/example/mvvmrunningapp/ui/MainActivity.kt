@@ -1,9 +1,12 @@
 package com.example.mvvmrunningapp.ui
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -13,7 +16,10 @@ import com.example.mvvmrunningapp.databinding.ActivityMainBinding
 import com.example.mvvmrunningapp.db.RunDAO
 import com.example.mvvmrunningapp.extensions.toGone
 import com.example.mvvmrunningapp.extensions.toVisible
+import com.example.mvvmrunningapp.other.Constants
+import com.example.mvvmrunningapp.other.Constants.ACTION_SHOW_TRACKING_FRAGMENT
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -31,8 +37,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        navigateToTrackingFragmentIfNeeded(intent)
+
         setUpNavigationWithActionBar()
 
+    }
+
+    // 액티비티가 destroy되지 않고 다시 열렸을 때 onCreate를 타지 않고 onNewIntent로 오게된다.
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Timber.d("onNewIntent is called.")
+        navigateToTrackingFragmentIfNeeded(intent)
     }
 
     private fun setUpNavigationWithActionBar() = with(binding) {
@@ -45,6 +60,23 @@ class MainActivity : AppCompatActivity() {
                 else -> bottomNav.toGone()
             }
         }
+    }
+
+    private fun navigateToTrackingFragmentIfNeeded(intent: Intent?) {
+        if (intent?.action == ACTION_SHOW_TRACKING_FRAGMENT) {
+            navigationController.navigate(R.id.action_global_trackingFragment)
+        }
+    }
+
+    companion object {
+
+        fun newIntent(context: Context) = Intent(
+            context,
+            MainActivity::class.java
+        ).apply {
+            action = Constants.ACTION_SHOW_TRACKING_FRAGMENT
+        }
+
     }
 
 }
