@@ -19,4 +19,8 @@ object Constants {
     const val NOTIFICATION_CHANNEL_NAME = "NOTIFICATION_CHANNEL_NAME"
     const val NOTIFICATION_ID = 1
 
+    /** LOCATION */
+    const val LOCATION_UPDATE_INTERVAL = 5000L // 5초 마다 location을 업데이트
+    const val FASTEST_LOCATION_INTERVAL = 2000L // 최소 2초 위치 간격(메모리 리소스를 아끼기 위함)
+
 }
