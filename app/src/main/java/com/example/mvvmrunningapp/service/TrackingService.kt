@@ -18,7 +18,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.mvvmrunningapp.R
 import com.example.mvvmrunningapp.other.Constants.ACTION_PAUSE_SERVICE
-import com.example.mvvmrunningapp.other.Constants.ACTION_SHOW_TRACKING_FRAGMENT
 import com.example.mvvmrunningapp.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import com.example.mvvmrunningapp.other.Constants.ACTION_STOP_SERVICE
 import com.example.mvvmrunningapp.other.Constants.FASTEST_LOCATION_INTERVAL
@@ -35,9 +34,6 @@ import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import timber.log.Timber
-
-typealias Polyline = MutableList<LatLng>
-typealias Polylines = MutableList<Polyline>
 
 class TrackingService : LifecycleService() {
 
@@ -69,10 +65,12 @@ class TrackingService : LifecycleService() {
                         isFirstRun = false
                     } else {
                         Timber.d("Resuming service...")
+                        startForegroundService()
                     }
                 }
                 ACTION_PAUSE_SERVICE -> {
                     Timber.d("Paused service.")
+                    pauseTracking()
                 }
                 ACTION_STOP_SERVICE -> {
                     Timber.d("Stopped service.")
@@ -180,6 +178,10 @@ class TrackingService : LifecycleService() {
         }
     }
 
+    private fun pauseTracking() {
+        isTracking.postValue(false)
+    }
+
     companion object {
 
         fun newServiceIntent(context: Context, action: String) = Intent(context, TrackingService::class.java).also {
@@ -193,3 +195,6 @@ class TrackingService : LifecycleService() {
     }
 
 }
+
+typealias Polyline = MutableList<LatLng>
+typealias Polylines = MutableList<Polyline>
