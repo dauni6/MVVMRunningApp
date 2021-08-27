@@ -33,6 +33,9 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class TrackingService : LifecycleService() {
@@ -40,6 +43,14 @@ class TrackingService : LifecycleService() {
     private var isFirstRun = true
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    private val timeRunInSeconds = MutableLiveData<Long>()
+
+    private var isTimerEnabled = false
+    private var lapTime = 0L
+    private var timeRun = 0L
+    private var timeStarted = 0L // 언제 타이머를 시작했는지에 대한 초
+    private var lastSecondTimestamp = 0L
 
     override fun onCreate() {
         super.onCreate()
@@ -53,6 +64,25 @@ class TrackingService : LifecycleService() {
         isTracking.observe(this, Observer {
             updateLocationTracking(it)
         })
+    }
+
+    private fun startTimer() {
+        addEmptyPolyline()
+        isTracking.postValue(true)
+        timeStarted = System.currentTimeMillis()
+        isTimerEnabled = true
+
+        CoroutineScope(Dispatchers.Main).launch {
+            while (isTracking.value!!) {
+                // time difference between now and timeStarted
+                lapTime = System.currentTimeMillis() - timeStarted
+                // post the new lapTime
+                timeRunInMillis.postValue(timeRun + lapTime)
+                if (timeRunInMillis.value!! >= lastSecondTimestamp + 1000L) {
+
+                }
+            }
+        }
     }
 
     // intent를 서비스에 보낼 때 callback됨. 최초 한 번만 실행??
@@ -83,7 +113,6 @@ class TrackingService : LifecycleService() {
     }
 
     private fun startForegroundService() {
-        addEmptyPolyline()
         isTracking.postValue(true)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -191,6 +220,9 @@ class TrackingService : LifecycleService() {
 
         val isTracking = MutableLiveData<Boolean>()
         val pathPoints = MutableLiveData<Polylines>()
+
+        val timeRunInMillis = MutableLiveData<Long>()
+
 
     }
 
