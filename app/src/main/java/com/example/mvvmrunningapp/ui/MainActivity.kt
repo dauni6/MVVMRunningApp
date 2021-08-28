@@ -37,6 +37,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar) // 호스트인 액티비티에 actionbar가 없으면 각 프래그먼트에서 setHasOptionsMenu(true)로 해도 나타나지 않음.
+
         navigateToTrackingFragmentIfNeeded(intent)
 
         setUpNavigationWithActionBar()
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpNavigationWithActionBar() = with(binding) {
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.runFragment, R.id.statisticsFragment, R.id.settingsFragment)) // 탭 간 전환시 업버튼이 뜨지 않도록 하기 위함
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.setupFragment, R.id.runFragment, R.id.statisticsFragment, R.id.settingsFragment, R.id.trackingFragment)) // 탭 간 전환시 업버튼이 뜨지 않도록 하기 위함
         bottomNav.setupWithNavController(navigationController)
         toolbar.setupWithNavController(navigationController, appBarConfiguration)
         navigationController.addOnDestinationChangedListener { _, destination, _ ->

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MVVMRunningApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.MVVMRunningApp" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Original AppCompat attributes. -->
         <item name="colorPrimary">@color/md_blue_900</item>
         <item name="colorSecondary">@color/md_blue_500</item>
@@ -33,6 +33,7 @@
         <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
 
         <item name="alertDialogTheme">@style/AlertDialogTheme</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
     </style>
 
     <style name="TextViewStyle" parent="Widget.MaterialComponents.TextView">

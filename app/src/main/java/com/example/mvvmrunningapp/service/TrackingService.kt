@@ -47,6 +47,7 @@ import javax.inject.Inject
 class TrackingService : LifecycleService() {
 
     private var isFirstRun = true
+    private var serviceKilled = false
 
     @Inject
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -102,6 +103,15 @@ class TrackingService : LifecycleService() {
         }
     }
 
+    private fun killService() {
+        serviceKilled = true
+        isFirstRun = true // service가 죽었기 때문에 다시 시작할 수 있도록
+        pauseTracking()
+        postInitialValues()
+        stopForeground(true) // foreground service에 대한 notification 지우기
+        stopSelf() // stop whole service
+    }
+
     // intent를 서비스에 보낼 때 callback됨. 최초 한 번만 실행??
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
@@ -121,6 +131,7 @@ class TrackingService : LifecycleService() {
                 }
                 ACTION_STOP_SERVICE -> {
                     Timber.d("Stopped service.")
+                    killService()
                 }
             }
         }
@@ -142,9 +153,11 @@ class TrackingService : LifecycleService() {
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
         timeRunInSeconds.observe(this, Observer {
-            val notification = currentNotificationBuilder
-                .setContentText(TrackingUtil.getFormattedStopWatchTime(it * 1000L))
-            notificationManager.notify(NOTIFICATION_ID, notification.build())
+            if (!serviceKilled) { // if문 안에 아래의 코드를 넣는 이유는, service와 notification이 종료되어도 observe()가 호출할 수 있기 때문에
+                val notification = currentNotificationBuilder
+                    .setContentText(TrackingUtil.getFormattedStopWatchTime(it * 1000L))
+                notificationManager.notify(NOTIFICATION_ID, notification.build())
+            }
         })
 
     }
@@ -174,14 +187,10 @@ class TrackingService : LifecycleService() {
     private fun updateNotificationTrackingState(isTracking: Boolean) {
         val notificationActionText = if (isTracking) "Pause" else "Resume"
         val pendingIntent = if (isTracking) {
-            val pauseIntent = Intent(this,  TrackingService::class.java).apply {
-                action = ACTION_PAUSE_SERVICE
-            }
+            val pauseIntent = newServiceIntent(this, ACTION_PAUSE_SERVICE)
             PendingIntent.getService(this, 1, pauseIntent, FLAG_UPDATE_CURRENT)
         } else {
-            val resumeIntent = Intent(this, TrackingService::class.java).apply {
-                action = ACTION_START_OR_RESUME_SERVICE
-            }
+            val resumeIntent = newServiceIntent(this, ACTION_START_OR_RESUME_SERVICE)
             PendingIntent.getService(this, 2, resumeIntent, FLAG_UPDATE_CURRENT)
         }
 
@@ -192,9 +201,11 @@ class TrackingService : LifecycleService() {
             set(currentNotificationBuilder, ArrayList<NotificationCompat.Action>())
         }
 
-        currentNotificationBuilder = baseNotificationBuilder
-            .addAction(R.drawable.ic_pause_black_24dp, notificationActionText, pendingIntent)
-        notificationManager.notify(NOTIFICATION_ID, currentNotificationBuilder.build())
+        if (!serviceKilled) {
+            currentNotificationBuilder = baseNotificationBuilder
+                .addAction(R.drawable.ic_pause_black_24dp, notificationActionText, pendingIntent)
+            notificationManager.notify(NOTIFICATION_ID, currentNotificationBuilder.build())
+        }
 
     }
 
@@ -250,16 +261,18 @@ class TrackingService : LifecycleService() {
 
     companion object {
 
-        fun newServiceIntent(context: Context, action: String) = Intent(context, TrackingService::class.java).also {
+        val isTracking = MutableLiveData<Boolean>()
+        val pathPoints = MutableLiveData<Polylines>()
+        val timeRunInMillis = MutableLiveData<Long>()
+
+        fun newServiceIntentWithStartService(context: Context, action: String) = Intent(context, TrackingService::class.java).also {
             it.action = action
             context.startService(it)
         }
 
-        val isTracking = MutableLiveData<Boolean>()
-        val pathPoints = MutableLiveData<Polylines>()
-
-        val timeRunInMillis = MutableLiveData<Long>()
-
+        fun newServiceIntent(context: Context, action: String) = Intent(context, TrackingService::class.java).also {
+            it.action = action
+        }
 
     }
 
