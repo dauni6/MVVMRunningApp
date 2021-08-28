@@ -17,4 +17,5 @@
     <string name="txt_total_calories_burned">Total Calories Burned</string>
     <string name="txt_average_speed">Average Speed</string>
     <string name="txt_cancel_run">Cancel Run</string>
+    <string name="txt_save_run_successfully">Run saved successfully</string>
 </resources>
