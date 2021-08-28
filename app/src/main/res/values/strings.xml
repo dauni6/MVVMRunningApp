@@ -18,4 +18,9 @@
     <string name="txt_average_speed">Average Speed</string>
     <string name="txt_cancel_run">Cancel Run</string>
     <string name="txt_save_run_successfully">Run saved successfully</string>
+    <string name="txt_date">DATE</string>
+    <string name="txt_time">TIME</string>
+    <string name="txt_distance">DISTANCE</string>
+    <string name="txt_avgspeed">AVGSPEED</string>
+    <string name="txt_calories">CALORIES</string>
 </resources>

@@ -8,8 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mvvmrunningapp.R
+import com.example.mvvmrunningapp.adapters.RunAdapter
 import com.example.mvvmrunningapp.databinding.FragmentRunBinding
 import com.example.mvvmrunningapp.databinding.FragmentSetupBinding
 import com.example.mvvmrunningapp.other.Constants.REQUEST_CODE_LOCATION_PERMISSION
@@ -27,6 +30,8 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private val viewModel: MainViewModel by viewModels()
 
+    private lateinit var runAdapter: RunAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,6 +44,8 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         super.onViewCreated(view, savedInstanceState)
         requestPermission()
         initListeners()
+        initRecyclerView()
+        initObservers()
     }
 
     private fun initListeners() = with(binding) {
@@ -46,6 +53,18 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             val action = RunFragmentDirections.actionRunToTracking()
             findNavController().navigate(action)
         }
+    }
+
+    private fun initRecyclerView() = binding.rvRuns.apply {
+        runAdapter = RunAdapter()
+        adapter = runAdapter
+        layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    private fun initObservers() {
+        viewModel.runsSortedByDate.observe(viewLifecycleOwner, Observer {
+            runAdapter.submitList(it)
+        })
     }
 
     private fun requestPermission() {
@@ -74,9 +93,9 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms))
-            AppSettingsDialog.Builder(this).build().show()
-        else
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)){
+            AppSettingsDialog.Builder(this).build().show()}
+        else{}
             requestPermission()
     }
 

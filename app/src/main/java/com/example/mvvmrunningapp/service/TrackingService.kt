@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
-import android.app.PendingIntent.getActivities
 import android.content.Context
 import android.content.Intent
 import android.location.Location
@@ -28,7 +27,6 @@ import com.example.mvvmrunningapp.other.Constants.NOTIFICATION_CHANNEL_NAME
 import com.example.mvvmrunningapp.other.Constants.NOTIFICATION_ID
 import com.example.mvvmrunningapp.other.Constants.TIMER_UPDATE_INTERVAL
 import com.example.mvvmrunningapp.other.TrackingUtil
-import com.example.mvvmrunningapp.ui.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -71,10 +69,10 @@ class TrackingService : LifecycleService() {
         postInitialValues()
         fusedLocationProviderClient = FusedLocationProviderClient(this)
 
-        initObserver()
+        initObservers()
     }
 
-    private fun initObserver() {
+    private fun initObservers() {
         isTracking.observe(this, Observer {
             updateLocationTracking(it)
             updateNotificationTrackingState(it)

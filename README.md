@@ -15,3 +15,8 @@
  <pre>
  1. Snackbar를 사용할 때 view가 필요하다. tracking을 저장하면 navigate()를 이용하여 RunFragment로 이동하는데, 이때 TrackingFragment의 view를 사용할 수 없음에 주의하자. (해당 코드에 더 자세한 설명이 있음)
  </pre>
+
+ ## part19. Showing Runs in the RecyclerView
+ <pre>
+
+ </pre>
