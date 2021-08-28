@@ -25,6 +25,7 @@ import com.example.mvvmrunningapp.other.Constants.LOCATION_UPDATE_INTERVAL
 import com.example.mvvmrunningapp.other.Constants.NOTIFICATION_CHANNEL_ID
 import com.example.mvvmrunningapp.other.Constants.NOTIFICATION_CHANNEL_NAME
 import com.example.mvvmrunningapp.other.Constants.NOTIFICATION_ID
+import com.example.mvvmrunningapp.other.Constants.TIMER_UPDATE_INTERVAL
 import com.example.mvvmrunningapp.other.TrackingUtil
 import com.example.mvvmrunningapp.ui.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -35,6 +36,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -79,9 +81,12 @@ class TrackingService : LifecycleService() {
                 // post the new lapTime
                 timeRunInMillis.postValue(timeRun + lapTime)
                 if (timeRunInMillis.value!! >= lastSecondTimestamp + 1000L) {
-
+                    timeRunInSeconds.postValue(timeRunInSeconds.value!! + 1)
+                    lastSecondTimestamp += 1000L
                 }
+                delay(TIMER_UPDATE_INTERVAL)
             }
+            timeRun += lapTime
         }
     }
 
@@ -95,7 +100,7 @@ class TrackingService : LifecycleService() {
                         isFirstRun = false
                     } else {
                         Timber.d("Resuming service...")
-                        startForegroundService()
+                       startTimer()
                     }
                 }
                 ACTION_PAUSE_SERVICE -> {
@@ -113,6 +118,7 @@ class TrackingService : LifecycleService() {
     }
 
     private fun startForegroundService() {
+        startTimer()
         isTracking.postValue(true)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -155,6 +161,8 @@ class TrackingService : LifecycleService() {
     private fun postInitialValues() {
         isTracking.postValue(false) // true가 되면 location을 tracking한다. false면 tracking을 중지한다. 중지되면 더 이상 업데이트를 할 필요가 없다
         pathPoints.postValue(mutableListOf())
+        timeRunInSeconds.postValue(0L)
+        timeRunInMillis.postValue(0L)
     }
 
     private fun addEmptyPolyline() = pathPoints.value?.apply {
@@ -209,6 +217,7 @@ class TrackingService : LifecycleService() {
 
     private fun pauseTracking() {
         isTracking.postValue(false)
+        isTimerEnabled = false
     }
 
     companion object {
