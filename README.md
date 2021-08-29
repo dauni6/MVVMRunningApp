@@ -39,5 +39,13 @@
 
  ## part22. Total Run Statistics & SettingsFragment
  <pre>
-
+ 1. SettingsFragment랑 StatisticsFragment 수정. SettingsFragment에는 이름이나 몸무게를 다시 SharedPreference에 저장하고
+ StatisticsFragment에는 total정보들을 StatisticsViewModel에 만들어놓은 LiveData를 observe하여 변경하도록 함
  </pre>
+
+ ## part23. Setting up the BarChart
+ <pre>
+ 1. BarChart로 변경하고 적용하기
+ </pre>
+
+ 

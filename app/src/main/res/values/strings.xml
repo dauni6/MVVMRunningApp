@@ -23,4 +23,7 @@
     <string name="txt_distance">DISTANCE</string>
     <string name="txt_avgspeed">AVGSPEED</string>
     <string name="txt_calories">CALORIES</string>
+    <string name="txt_duration">DURATION</string>
+    <string name="txt_avg_speed">AVG SPEED</string>
+    <string name="txt_calories_burned">CALORIES BURNED</string>
 </resources>

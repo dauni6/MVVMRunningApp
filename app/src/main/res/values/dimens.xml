@@ -9,4 +9,5 @@
     <dimen name="basic32">32dp</dimen>
     <dimen name="txt16">16sp</dimen>
     <dimen name="basic300">300dp</dimen>
+    <dimen name="basic15">15dp</dimen>
 </resources>
