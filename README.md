@@ -36,3 +36,8 @@
  3. 이미 접속한 이력이 있는 사람이면 setupFragment를 거치지 않고 바로 runFragment로 보내준다. 이때 뒤로가기를 하면 다시 setupFragment가 나오지 않도록 하기 위해
  runFragment로 가기전에 navOptions를 이용하여 setupFragment를 반드시 백스택에서 제거해준다
  </pre>
+
+ ## part22. Total Run Statistics & SettingsFragment
+ <pre>
+
+ </pre>

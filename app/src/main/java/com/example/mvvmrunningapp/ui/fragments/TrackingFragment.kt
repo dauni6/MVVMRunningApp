@@ -119,16 +119,13 @@ class TrackingFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        Timber.d("tracking - onCreateOptionsMenu() is called.")
         inflater.inflate(R.menu.toolbar_tracking_menu, menu)
         this.menu = menu
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        Timber.d("tracking - onPrepareOptionsMenu() is called.")
         if (currentTimeInMillis > 0L) { // 시작중이라면
-            Timber.d("tracking - onPrepareOptionsMenu() is called.")
             this.menu?.getItem(0)?.toVisible()
         }
     }
