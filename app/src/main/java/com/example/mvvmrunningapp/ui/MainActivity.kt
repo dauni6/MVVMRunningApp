@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUpNavigationWithActionBar() = with(binding) {
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.setupFragment, R.id.runFragment, R.id.statisticsFragment, R.id.settingsFragment, R.id.trackingFragment)) // 탭 간 전환시 업버튼이 뜨지 않도록 하기 위함
         bottomNav.setupWithNavController(navigationController)
+        bottomNav.setOnItemReselectedListener { /** NOTHING */ }
         toolbar.setupWithNavController(navigationController, appBarConfiguration)
         navigationController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {

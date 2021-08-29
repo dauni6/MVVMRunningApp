@@ -48,4 +48,15 @@
  1. BarChart로 변경하고 적용하기
  </pre>
 
- 
+ ## part24. Bug fix
+ <pre>
+ 1. tracking을 start하고 x버튼을 누른 뒤 다시 tracking을 하려고 trackingFragment에 들어가면 다시 시작임엗 불구하고 FINISH RUN 버튼이 보이는 오류 수정
+ 2. CancelDialog가 보이는 상태에서 화면을 portrait -> landscape로 전환하면 dialog가 사라지는 오류 수정
+ (CustomCancelDialog를 만들었고, 만들때 parentFragmentManager를 사용했다. TrackingFragment가 destory된 뒤 다시 만들어지면 기존에 사용했던 MaterialAlertDialogBuilder는
+ TrackingFragment의 생명주기를 따르기 때문에 화면전환 시 없어지기 때문이다. 또한 CustomCancelDialog에서 positiveListener를 통해서 dialog를 제어함. 또한 반드시 CancelDialog가 TAG를 가지고 있어야만 한다.
+  그렇지 않으면 화면전환시에는 CustomCancelDialog가 살아있지만 화면전환 시 CustomCancelDialog의 positiveListener는 초기화가 null이기 때문에 positiveListener가 동작하지 않게 된다.
+  반드시 TAG가 있어야 하며 화면전환시 뷰가 파괴되어 다시 TrackingFragment가 onViewCreated()를 호출하게 될 때 savedInstanceState를 통해 TAG를 통해서 데이터를 가져온 뒤 positiveListener를 동작시킬 수 있게 된다)
+ 3. 간헐적으로 조금전에 저장했던 tarcking time이 다시 trackingFragment에 들어갔을 때 보이는 오류 수정
+ 4. BottomNavigation에서 동일한 메뉴를 누르면 다시 리로드되는 현상 수정(ex: runFragment 메뉴를 누르면 변경없어야하는데 다시 리로드됨)
+ 추가로 setOnNavigationItemReselectedListener를 사용하려 했으나 deprecated되어 setOnItemReselectedListener로 변경함
+ </pre>

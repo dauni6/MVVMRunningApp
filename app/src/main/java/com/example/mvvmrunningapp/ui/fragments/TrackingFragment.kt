@@ -25,10 +25,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.round
@@ -68,8 +66,21 @@ class TrackingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        checkStillSameCancelDialog(savedInstanceState) // 화면전환 후후
         initViews(savedInstanceState)
         initObservers()
+    }
+
+    private fun checkStillSameCancelDialog(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            val cancelTrackingDialog = parentFragmentManager.findFragmentByTag(
+                CancelTrackingDialog::javaClass.name
+            ) as CancelTrackingDialog?
+            cancelTrackingDialog?.setPositiveListener {
+                stopRun()
+            }
+        }
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
@@ -141,21 +152,15 @@ class TrackingFragment : Fragment() {
     }
 
     private fun showCancelTrackingDialog() {
-        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-            .setTitle("Cancel the Run?")
-            .setMessage("Are you sure to cancel the current run and delete all its data?")
-            .setIcon(R.drawable.ic_delete)
-            .setPositiveButton("Yes") { _, _ ->
+        CancelTrackingDialog().apply {
+            setPositiveListener {
                 stopRun()
             }
-            .setNegativeButton("No") { dialog, _ ->
-                dialog.cancel()
-            }
-            .create()
-            .show()
+        }.show(parentFragmentManager, CancelTrackingDialog::javaClass.name)
     }
 
     private fun stopRun() {
+        binding.tvTimer.text = "00:00:00:00"
         sendCommandToService(ACTION_STOP_SERVICE)
         val action = TrackingFragmentDirections.actionTrackingToRun()
         findNavController().navigate(action)
@@ -164,10 +169,10 @@ class TrackingFragment : Fragment() {
     // UI업데이트를 isTracking으로 구분하여 업데이트하기
     private fun updateTracking(isTracking: Boolean) {
         this.isTracking = isTracking
-        if (!isTracking) {
+        if (!isTracking && currentTimeInMillis > 0L) {
             binding.btnToggleRun.text = "Start"
             binding.btnFinishRun.toVisible()
-        } else {
+        } else if (isTracking) {
             binding.btnToggleRun.text = "Stop"
             binding.btnFinishRun.toGone()
             menu?.getItem(0)?.toVisible()
