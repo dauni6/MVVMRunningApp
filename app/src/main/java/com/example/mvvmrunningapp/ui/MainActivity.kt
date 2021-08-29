@@ -70,6 +70,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun changeToolbarName(text: String) {
+        binding.tvToolbarTitle.text = text
+    }
+
     companion object {
 
         fun newIntent(context: Context) = Intent(
